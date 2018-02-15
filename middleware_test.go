@@ -129,7 +129,7 @@ func TestMiddlewareOptionRequestID(t *testing.T) {
 
 	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
 		if value, ok := tags["request_id"]; !ok || value != "test" {
-			t.Fatalf("MiddlewareOptionEnv did not update log annotations, %v", tags)
+			t.Fatalf("MiddlewareOptionRequestID did not update log annotations, %v", tags)
 		}
 	})
 	m.ServeHTTP(httptest.NewRecorder(), req)
@@ -145,6 +145,7 @@ func TestMiddlewareOptionLevel(t *testing.T) {
 	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
 	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
 
+	output.EXPECT().Write(gomock.Any()).Times(0)
 	m.ServeHTTP(httptest.NewRecorder(), req)
 }
 
