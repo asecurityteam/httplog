@@ -1,0 +1,11 @@
+package: bitbucket.org/atlassian/stridelogs
+import:
+- package: bitbucket.org/atlassian/respwrapper
+  vcs: git
+  repo: git@bitbucket.org:hipchat/respwrapper # Needs update to OSS respwrapper
+  version: ^1.0.0
+- package: bitbucket.org/atlassian/logevent
+  vcs: git
+  repo: git@bitbucket.org:atlassian/logevent
+  version: ^1.0.0
+- package: github.com/rs/xlog
