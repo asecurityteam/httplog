@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"bitbucket.org/atlassian/logevent"
-	"bitbucket.org/atlassian/respwrapper"
 	"github.com/rs/xlog"
 )
 
@@ -93,7 +92,7 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
 			base,
 		),
 	)
-	var wrapper = respwrapper.WrapWriter(w)
+	var wrapper = wrapWriter(w, r.ProtoMajor)
 	var bodyWrapper = &recordingReader{r.Body, new(int32)}
 	r.Body = bodyWrapper
 	var start = time.Now()
