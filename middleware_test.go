@@ -27,12 +27,20 @@ func middlewareOptionOutput(output xlog.Output) MiddlewareOption {
 	}
 }
 
-func TestMiddlewareOptionTag(t *testing.T) {
+func TestMiddlewareOptions(t *testing.T) {
 	var ctrl = gomock.NewController(t)
 	defer ctrl.Finish()
 
 	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionTag("test", "test"))
+	var result = NewMiddleware(
+		middlewareOptionOutput(output),
+		MiddlewareOptionTag("test", "test"),
+		MiddlewareOptionHost("host"),
+		MiddlewareOptionService("service"),
+		MiddlewareOptionVersion("version"),
+		MiddlewareOptionEnv("env"),
+		MiddlewareOptionRequestID(func(*http.Request) string { return "reqid" }),
+	)
 	var m = result(fixtureHandler{}).(*Middleware)
 	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
 	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
@@ -41,94 +49,19 @@ func TestMiddlewareOptionTag(t *testing.T) {
 		if value, ok := tags["test"]; !ok || value != "test" {
 			t.Fatal("MiddlewareOptionTag did not annotate logs")
 		}
-	})
-	m.ServeHTTP(httptest.NewRecorder(), req)
-}
-
-func TestMiddlewareOptionService(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionService("test"))
-	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
-	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
-
-	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
-		if value, ok := tags["service"]; !ok || value != "test" {
+		if value, ok := tags["service"]; !ok || value != "service" {
 			t.Fatalf("MiddlewareOptionService did not update log annotations, %v", tags)
 		}
-	})
-	m.ServeHTTP(httptest.NewRecorder(), req)
-}
-
-func TestMiddlewareOptionHost(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionHost("test"))
-	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
-	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
-
-	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
-		if value, ok := tags["host"]; !ok || value != "test" {
+		if value, ok := tags["host"]; !ok || value != "host" {
 			t.Fatalf("MiddlewareOptionHost did not update log annotations, %v", tags)
 		}
-	})
-	m.ServeHTTP(httptest.NewRecorder(), req)
-}
-
-func TestMiddlewareOptionVersion(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionVersion("test"))
-	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
-	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
-
-	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
-		if value, ok := tags["version"]; !ok || value != "test" {
+		if value, ok := tags["version"]; !ok || value != "version" {
 			t.Fatalf("MiddlewareOptionVersion did not update log annotations, %v", tags)
 		}
-	})
-	m.ServeHTTP(httptest.NewRecorder(), req)
-}
-
-func TestMiddlewareOptionEnv(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionEnv("test"))
-	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
-	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
-
-	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
-		if value, ok := tags["env"]; !ok || value != "test" {
+		if value, ok := tags["env"]; !ok || value != "env" {
 			t.Fatalf("MiddlewareOptionEnv did not update log annotations, %v", tags)
 		}
-	})
-	m.ServeHTTP(httptest.NewRecorder(), req)
-}
-
-func TestMiddlewareOptionRequestID(t *testing.T) {
-	var ctrl = gomock.NewController(t)
-	defer ctrl.Finish()
-
-	var output = NewMockOutput(ctrl)
-	var result = NewMiddleware(middlewareOptionOutput(output), MiddlewareOptionRequestID(func(*http.Request) string { return "test" }))
-	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
-	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
-
-	output.EXPECT().Write(gomock.Any()).Do(func(tags map[string]interface{}) {
-		if value, ok := tags["request_id"]; !ok || value != "test" {
+		if value, ok := tags["request_id"]; !ok || value != "reqid" {
 			t.Fatalf("MiddlewareOptionRequestID did not update log annotations, %v", tags)
 		}
 	})
