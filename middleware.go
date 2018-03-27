@@ -271,13 +271,13 @@ func NewEvent(ctx context.Context) Event {
 	}
 }
 
-// OutOfBand returns a Logger with all of the configuration provided to the
+// OutOfBand returns a context with all of the configuration provided to the
 // middleware. This is provided with the primary intent of allowing for log
 // emissions during runtime setup (such as main.go) and background routines that
 // are not attached to a request or request context.
-func OutOfBand(middleware func(http.Handler) http.Handler) xlog.Logger {
+func OutOfBand(ctx context.Context, middleware func(http.Handler) http.Handler) context.Context {
 	if m, ok := middleware(nil).(*Middleware); ok {
-		return xlog.New(m.conf)
+		ctx = xlog.NewContext(ctx, xlog.New(m.conf))
 	}
-	return xlog.FromContext(context.Background())
+	return ctx
 }
