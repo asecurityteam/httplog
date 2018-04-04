@@ -1,4 +1,4 @@
-package stridelogs
+package stridelog
 
 import (
 	"context"

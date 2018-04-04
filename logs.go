@@ -1,4 +1,4 @@
-package stridelogs
+package stridelog
 
 // Base implements the core, developer schema that all events share.
 type Base struct {

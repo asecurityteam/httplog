@@ -1,4 +1,4 @@
-# stridelogs #
+# stridelog #
 
 **Structured log types for Stride services.**
 
@@ -13,17 +13,17 @@ by services.
 This packages exports several structs that represent the structured log events
 defined by Atlassian's specification:
 
-- `stridelogs.Base`
+- `stridelog.Base`
 
   This represents the minimum, common base of all log events. All events must
   contain the fields defined in this struct.
 
-- `stridelogs.Access`
+- `stridelog.Access`
 
   This defines the fields needed in all system access logs. These are modelled
   after HTTP request logs available from other systems like Apache or NGINX.
 
-- `stridelogs.Event`
+- `stridelog.Event`
 
   This struct represents the base for all developer defined system events. This
   struct should be embedded in all logs emitted by a service.
@@ -34,7 +34,7 @@ This package is primarily focused on providing a logging harness around HTTP
 services and exposes a wrapper for `http.Handler` that provides this feature.
 
 ```golang
-var middleware = stridelogs.NewMiddleware()
+var middleware = stridelog.NewMiddleware()
 http.ListenAndServer(":8080", middleware(http.DefaultServeMux))
 ```
 
@@ -43,7 +43,7 @@ compliant access logs for your HTTP service. Quite a few default settings are
 selected which can be overridden with the available function arguments.
 
 ```golang
-var middleware = stridelogs.NewMiddleware(
+var middleware = stridelog.NewMiddleware(
   MiddlewareOptionTag("key", "value"), // Add arbitrary annotations to all logs.
   MiddlewareOptionService("myService"), // Set the service name field to a custom value.
   MiddlewareOptionHost("customHost"), // Set the host field to something other than the system hostname.
