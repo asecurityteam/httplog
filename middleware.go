@@ -4,17 +4,14 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"sync/atomic"
 	"time"
 
 	"bitbucket.org/atlassian/logevent"
-	"github.com/rs/xlog"
 )
 
 type ctxKey string
@@ -43,22 +40,20 @@ func (r *recordingReader) Read(p []byte) (int, error) {
 // provides, via context, tools for constructing higher level log events that
 // contain the Stride standard attributes.
 type Middleware struct {
-	service        string
-	version        string
-	host           string
-	env            string
-	tags           map[string]interface{}
-	level          xlog.Level
-	patchSTDLib    bool
-	outputStream   xlog.Output
-	conf           xlog.Config
-	requestID      func(*http.Request) string
-	transactionID  func(context.Context) string
-	xlogMiddleware func(http.Handler) http.Handler
-	next           http.Handler
+	service       string
+	version       string
+	host          string
+	env           string
+	tags          map[string]interface{}
+	requestID     func(*http.Request) string
+	transactionID func(context.Context) string
+	next          http.Handler
 }
 
-func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
+func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	for key, value := range m.tags {
+		logevent.FromContext(r.Context()).SetField(key, value)
+	}
 	var srcIP, _, _ = net.SplitHostPort(r.RemoteAddr)
 	var dstIP, dstPortStr, _ = net.SplitHostPort(r.Context().Value(http.LocalAddrContextKey).(net.Addr).String())
 	var dstPort, _ = strconv.Atoi(dstPortStr)
@@ -104,10 +99,6 @@ func (m *Middleware) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	access.HTTPContentType = wrapper.Header().Get("Content-Type")
 	access.Status = wrapper.Status()
 	logevent.FromContext(r.Context()).Info(access)
-}
-
-func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	m.xlogMiddleware(http.HandlerFunc(m.serveHTTP)).ServeHTTP(w, r)
 }
 
 // MiddlewareOption is used to configure the HTTP server middleware.
@@ -179,51 +170,6 @@ func MiddlewareOptionTransactionID(transactionID func(context.Context) string) M
 	}
 }
 
-// levelFromString converts a string log level name into an xlog.Level type
-// for use with xlog.
-func levelFromString(level string) xlog.Level {
-	switch strings.ToUpper(level) {
-	case "DEBUG":
-		return xlog.LevelDebug
-	case "INFO":
-		return xlog.LevelInfo
-	case "WARN":
-		return xlog.LevelWarn
-	case "ERROR":
-		return xlog.LevelError
-	case "FATAL":
-		return xlog.LevelFatal
-	default:
-		return xlog.LevelDebug
-	}
-}
-
-// MiddlewareOptionLevel sets the lowest logging level that will appear in the
-// stream. The default value is INFO. Possible values are DEBUG, INFO, WARN,
-// ERROR, and FATAL.
-func MiddlewareOptionLevel(level string) MiddlewareOption {
-	return func(m *Middleware) *Middleware {
-		m.level = levelFromString(level)
-		return m
-	}
-}
-
-// MiddlewareOptionPatchSTDLib reconfigures the global, stdlib logger to use
-// a structured output. Request based annotations will not be available in
-// converted stdlib logs and events are only emitted at INFO level. By default,
-// the stdlib log package is left as is.
-func MiddlewareOptionPatchSTDLib(m *Middleware) *Middleware {
-	m.patchSTDLib = true
-	return m
-}
-
-// MiddlewareOptionConsole converts the default JSON output into a colourised,
-// tab/space delimited output for better human readability.
-func MiddlewareOptionConsole(m *Middleware) *Middleware {
-	m.outputStream = xlog.NewConsoleOutputW(os.Stdout, xlog.NewLogfmtOutput(os.Stdout))
-	return m
-}
-
 // NewMiddleware generates an HTTP handler wrapper that performs access logging
 // and injects a partial Event object into the context for later use.
 func NewMiddleware(options ...MiddlewareOption) func(http.Handler) http.Handler {
@@ -235,9 +181,6 @@ func NewMiddleware(options ...MiddlewareOption) func(http.Handler) http.Handler 
 			host:          hostname,
 			env:           "production",
 			tags:          make(map[string]interface{}),
-			level:         xlog.LevelInfo,
-			patchSTDLib:   false,
-			outputStream:  xlog.NewJSONOutput(os.Stdout),
 			requestID:     func(*http.Request) string { return fmt.Sprintf("%X", int64(0)) },
 			transactionID: func(context.Context) string { return fmt.Sprintf("%X", int64(0)) },
 			next:          next,
@@ -245,19 +188,6 @@ func NewMiddleware(options ...MiddlewareOption) func(http.Handler) http.Handler 
 		for _, option := range options {
 			m = option(m)
 		}
-		m.conf = xlog.Config{
-			Level:  m.level,
-			Fields: xlog.F(m.tags),
-			Output: xlog.OutputFunc(func(fields map[string]interface{}) error {
-				return m.outputStream.Write(fields)
-			}),
-			DisablePooling: true,
-		}
-		if m.patchSTDLib {
-			log.SetFlags(0)
-			log.SetOutput(xlog.New(m.conf))
-		}
-		m.xlogMiddleware = xlog.NewHandler(m.conf)
 		return m
 	}
 }
@@ -269,15 +199,4 @@ func NewEvent(ctx context.Context) Event {
 		Base:          ctx.Value(ctxKeyBase).(Base),
 		TransactionID: ctx.Value(ctxKeyTransactionID).(func(context.Context) string)(ctx),
 	}
-}
-
-// OutOfBand returns a context with all of the configuration provided to the
-// middleware. This is provided with the primary intent of allowing for log
-// emissions during runtime setup (such as main.go) and background routines that
-// are not attached to a request or request context.
-func OutOfBand(ctx context.Context, middleware func(http.Handler) http.Handler) context.Context {
-	if m, ok := middleware(nil).(*Middleware); ok {
-		ctx = xlog.NewContext(ctx, xlog.New(m.conf))
-	}
-	return ctx
 }

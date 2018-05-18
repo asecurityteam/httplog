@@ -4,4 +4,3 @@ import:
   vcs: git
   repo: git@bitbucket.org:atlassian/logevent
   version: ^1.0.0
-- package: github.com/rs/xlog
