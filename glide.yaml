@@ -1,4 +1,4 @@
-package: bitbucket.org/atlassian/stridelog
+package: bitbucket.org/atlassian/httplog
 import:
 - package: bitbucket.org/atlassian/logevent
   vcs: git

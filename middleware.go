@@ -1,4 +1,4 @@
-package stridelog
+package httplog
 
 import (
 	"context"
@@ -17,8 +17,8 @@ import (
 type ctxKey string
 
 var (
-	ctxKeyTransactionID = ctxKey("_stridelog_transaction_id")
-	ctxKeyBase          = ctxKey("_stridelog_base")
+	ctxKeyTransactionID = ctxKey("_httplog_transaction_id")
+	ctxKeyBase          = ctxKey("_httplog_base")
 )
 
 type recordingReader struct {
@@ -36,9 +36,9 @@ func (r *recordingReader) Read(p []byte) (int, error) {
 	return n, e
 }
 
-// Middleware wraps an HTTP handler with Stride standard access logs and
+// Middleware wraps an HTTP handler with Atlassian standard access logs and
 // provides, via context, tools for constructing higher level log events that
-// contain the Stride standard attributes.
+// contain the Atlassian standard attributes.
 type Middleware struct {
 	service       string
 	version       string
@@ -65,11 +65,11 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		RequestID: m.requestID(r),
 	}
 	var access = Access{
-		Base:          base,
-		SourceIP:      srcIP,
-		ForwardedFor:  r.Header.Get("X-Forwarded-For"),
-		DestinationIP: dstIP,
-		Site:          r.Host,
+		Base:                   base,
+		SourceIP:               srcIP,
+		ForwardedFor:           r.Header.Get("X-Forwarded-For"),
+		DestinationIP:          dstIP,
+		Site:                   r.Host,
 		HTTPRequestContentType: r.Header.Get("Content-Type"),
 		HTTPMethod:             r.Method,
 		HTTPReferrer:           r.Referer(),

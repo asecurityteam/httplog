@@ -1,4 +1,4 @@
-package stridelog
+package httplog
 
 import (
 	"bufio"
