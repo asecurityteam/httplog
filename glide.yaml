@@ -1,6 +1,5 @@
-package: bitbucket.org/atlassian/httplog
+package: github.com/asecurityteam/httplog
 import:
-- package: bitbucket.org/atlassian/logevent
+- package: github.com/asecurityteam/logevent
   vcs: git
-  repo: git@bitbucket.org:atlassian/logevent
   version: ^1.0.0

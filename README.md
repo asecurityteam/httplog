@@ -1,7 +1,20 @@
-# httplog #
+<a id="markdown-httplog---structured-access-log-types-for-http-services" name="httplog---structured-access-log-types-for-http-services"></a>
+# httplog - structured access log types for HTTP services. #
 
-**Structured log types for HTTP services.**
+*Status: Production*
 
+<!-- TOC -->
+
+- [httplog - structured access log types for HTTP services.](#httplog---structured-access-log-types-for-http-services)
+    - [Overview](#overview)
+    - [Usage](#usage)
+    - [Contributing](#contributing)
+        - [License](#license)
+        - [Contributing Agreement](#contributing-agreement)
+
+<!-- /TOC -->
+
+<a id="markdown-overview" name="overview"></a>
 ## Overview ##
 
 Atlassian development teams often operate multiple dozens of individual services
@@ -28,6 +41,7 @@ defined by Atlassian's specification:
   This struct represents the base for all developer defined system events. This
   struct should be embedded in all logs emitted by a service.
 
+<a id="markdown-usage" name="usage"></a>
 ## Usage ##
 
 This package is primarily focused on providing a logging harness around HTTP
@@ -59,12 +73,15 @@ var middleware = httplog.NewMiddleware(
 )
 ```
 
+<a id="markdown-contributing" name="contributing"></a>
 ## Contributing ##
 
+<a id="markdown-license" name="license"></a>
 ### License ###
 
 This project is licensed under Apache 2.0. See LICENSE.txt for details.
 
+<a id="markdown-contributing-agreement" name="contributing-agreement"></a>
 ### Contributing Agreement ###
 
 Atlassian requires signing a contributor's agreement before we can accept a

@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"bitbucket.org/atlassian/logevent"
+	"github.com/asecurityteam/logevent"
 )
 
 type ctxKey string

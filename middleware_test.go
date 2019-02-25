@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"bitbucket.org/atlassian/logevent"
+	"github.com/asecurityteam/logevent"
 	"github.com/golang/mock/gomock"
 )
 
