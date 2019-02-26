@@ -1,0 +1,15 @@
+# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
+# for detailed Gopkg.toml documentation.
+
+
+[[constraint]]
+  name = "github.com/asecurityteam/logevent"
+  version = "1.0.4"
+
+[[constraint]]
+  name = "github.com/golang/mock"
+  version = "1.2.0"
+
+[prune]
+  go-tests = true
+  unused-packages = true
