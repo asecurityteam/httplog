@@ -1,5 +1,0 @@
-package: github.com/asecurityteam/httplog
-import:
-- package: github.com/asecurityteam/logevent
-  vcs: git
-  version: ^1.0.0
