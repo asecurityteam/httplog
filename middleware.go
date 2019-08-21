@@ -45,6 +45,7 @@ type Middleware struct {
 	host          string
 	env           string
 	tags          map[string]interface{}
+	redacted      []string
 	requestID     func(*http.Request) string
 	transactionID func(context.Context) string
 	next          http.Handler
@@ -64,6 +65,14 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Env:       m.env,
 		RequestID: m.requestID(r),
 	}
+
+	var query = r.URL.Query()
+	for _, parameter := range m.redacted {
+		for i := range query[parameter] {
+			query[parameter][i] = "REDACTED"
+		}
+	}
+
 	var access = Access{
 		Base:                   base,
 		SourceIP:               srcIP,
@@ -75,7 +84,7 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		HTTPReferrer:           r.Referer(),
 		HTTPUserAgent:          r.UserAgent(),
 		URIPath:                r.URL.Path,
-		URIQuery:               r.URL.Query().Encode(),
+		URIQuery:               query.Encode(),
 		Scheme:                 r.URL.Scheme,
 		Port:                   dstPort,
 	}
@@ -170,6 +179,15 @@ func MiddlewareOptionTransactionID(transactionID func(context.Context) string) M
 	}
 }
 
+// MiddlewareOptionRedactParameter sets a parameter name whose value will be
+// redacted in the uri_query field of the logs.
+func MiddlewareOptionRedactParameter(name string) MiddlewareOption {
+	return func(m *Middleware) *Middleware {
+		m.redacted = append(m.redacted, name)
+		return m
+	}
+}
+
 // NewMiddleware generates an HTTP handler wrapper that performs access logging
 // and injects a partial Event object into the context for later use.
 func NewMiddleware(options ...MiddlewareOption) func(http.Handler) http.Handler {
@@ -181,6 +199,7 @@ func NewMiddleware(options ...MiddlewareOption) func(http.Handler) http.Handler 
 			host:          hostname,
 			env:           "production",
 			tags:          make(map[string]interface{}),
+			redacted:      []string{},
 			requestID:     func(*http.Request) string { return fmt.Sprintf("%X", int64(0)) },
 			transactionID: func(context.Context) string { return fmt.Sprintf("%X", int64(0)) },
 			next:          next,

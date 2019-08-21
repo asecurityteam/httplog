@@ -28,10 +28,11 @@ func TestMiddlewareOptions(t *testing.T) {
 		MiddlewareOptionService("service"),
 		MiddlewareOptionVersion("version"),
 		MiddlewareOptionEnv("env"),
+		MiddlewareOptionRedactParameter("test"),
 		MiddlewareOptionRequestID(func(*http.Request) string { return "reqid" }),
 	)
 	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
+	var req = httptest.NewRequest(http.MethodGet, "/?test=something&test2=something", ioutil.NopCloser(bytes.NewBufferString(``)))
 	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
 	req = req.WithContext(logevent.NewContext(req.Context(), logger))
 
@@ -56,6 +57,9 @@ func TestMiddlewareOptions(t *testing.T) {
 		}
 		if evt.RequestID != "reqid" {
 			t.Fatalf("MiddlewareOptionRequestID did not update log annotations, %v", evt)
+		}
+		if evt.URIQuery != "test=REDACTED&test2=something" {
+			t.Fatalf("MiddlewareOptionRedactParameter did not redact parameter value, %v", evt)
 		}
 	})
 	m.ServeHTTP(httptest.NewRecorder(), req)
