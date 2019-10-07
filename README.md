@@ -1,5 +1,6 @@
 <a id="markdown-httplog---structured-access-log-types-for-http-services" name="httplog---structured-access-log-types-for-http-services"></a>
 # httplog - structured access log types for HTTP services. #
+[![GoDoc](https://godoc.org/github.com/asecurityteam/httplog?status.svg)](https://godoc.org/github.com/asecurityteam/httplog)
 
 *Status: Production*
 
