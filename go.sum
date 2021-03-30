@@ -2,6 +2,8 @@ github.com/asecurityteam/logevent v0.0.0-20190226170331-bd08b415fa07 h1:D0Rr/zN2
 github.com/asecurityteam/logevent v0.0.0-20190226170331-bd08b415fa07/go.mod h1:B8p/D2QVPuRA9tiDTByVrXegCsrfy8bWEgnAka23EO0=
 github.com/asecurityteam/logevent v1.4.0 h1:sZ4X2JRzONcW3/jNapn0tjhc+t4K9gI1eHFzzuDi4nw=
 github.com/asecurityteam/logevent v1.4.0/go.mod h1:honZzywisDv/eTdOIWaNjJ1p0zgCG68zARUkr35CYDA=
+github.com/asecurityteam/logevent v1.5.0 h1:3zuGGhAY/x7XLK65lT0JEov/8vRYUwwTRrB6b0Gmml0=
+github.com/asecurityteam/logevent v1.5.0/go.mod h1:honZzywisDv/eTdOIWaNjJ1p0zgCG68zARUkr35CYDA=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fatih/structs v1.1.0 h1:Q7juDM0QtcnhCpeyLGQKyg4TOIghuNXrkL32pHAUMxo=
