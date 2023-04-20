@@ -3,7 +3,7 @@ package httplog
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -32,7 +32,7 @@ func TestMiddlewareOptions(t *testing.T) {
 		MiddlewareOptionRequestID(func(*http.Request) string { return "reqid" }),
 	)
 	var m = result(fixtureHandler{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/?test=something&test2=something", ioutil.NopCloser(bytes.NewBufferString(``)))
+	var req = httptest.NewRequest(http.MethodGet, "/?test=something&test2=something", io.NopCloser(bytes.NewBufferString(``)))
 	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
 	req = req.WithContext(logevent.NewContext(req.Context(), logger))
 
@@ -78,7 +78,7 @@ func TestMiddlewareOptionTransactionID(t *testing.T) {
 	var logger = NewMockLogger(ctrl)
 	var result = NewMiddleware(MiddlewareOptionTransactionID(func(context.Context) string { return "test" }))
 	var m = result(fixtureHandlerTransactionID{}).(*Middleware)
-	var req = httptest.NewRequest(http.MethodGet, "/", ioutil.NopCloser(bytes.NewBufferString(``)))
+	var req = httptest.NewRequest(http.MethodGet, "/", io.NopCloser(bytes.NewBufferString(``)))
 	req = req.WithContext(context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}))
 	req = req.WithContext(logevent.NewContext(req.Context(), logger))
 
