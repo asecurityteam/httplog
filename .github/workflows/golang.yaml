@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: 
+      - name: FS Permissions
         # workaround for permissions with contaner attempting to create directory
         run: mkdir -p .coverage vendor ; chmod 777 .coverage vendor
       - name: Dep
