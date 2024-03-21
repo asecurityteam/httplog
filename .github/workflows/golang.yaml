@@ -8,8 +8,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: FS Permissions
-        # workaround for permissions with contaner attempting to create directory
-        run: mkdir -p .coverage vendor ; chmod 777 .coverage vendor
+        # workaround for permissions with contaner attempting to create directories
+        run: chmod 777 -R "$(pwd)"
       - name: Dep
         run: make dep
       - name: Lint
