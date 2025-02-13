@@ -2,6 +2,20 @@
 # httplog - structured access log types for HTTP services. #
 [![GoDoc](https://godoc.org/github.com/asecurityteam/httplog?status.svg)](https://godoc.org/github.com/asecurityteam/httplog)
 
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=bugs)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=code_smells)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=coverage)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=ncloc)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=alert_status)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=security_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=sqale_index)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_httplog&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=asecurityteam_httplog)
+
+
 *Status: Production*
 
 <!-- TOC -->
