@@ -1,5 +1,7 @@
 github.com/asecurityteam/logevent/v2 v2.0.1 h1:2JMgyGZFwSOm+sKGlDZUQe0DCdUcmD0cFU6SqbJ4YKI=
 github.com/asecurityteam/logevent/v2 v2.0.1/go.mod h1:g6tvuTu9o9gC3vluYjAXr069xAfc4rJ2Hy/vsmuT1Ck=
+github.com/asecurityteam/logevent/v2 v2.0.2 h1:dPPRNqnMgjvHTf/NxpvrgAjAPvA7AG/bF2FnCrDnoD0=
+github.com/asecurityteam/logevent/v2 v2.0.2/go.mod h1:cCjepcJdgAKoVfOTftnZ/Mp0WMsfwgaJ75UOjfKTxVU=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
