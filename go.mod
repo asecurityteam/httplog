@@ -2,10 +2,10 @@ module github.com/asecurityteam/httplog
 
 go 1.22
 
-toolchain go1.23.1
+toolchain go1.24.2
 
 require (
-	github.com/asecurityteam/logevent/v2 v2.0.1
+	github.com/asecurityteam/logevent/v2 v2.0.2
 	github.com/golang/mock v1.6.0
 )
 
